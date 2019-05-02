@@ -53,11 +53,12 @@ public interface RoleService {
     /**
      * 查询所有
      *
+     * @param needPermission
      * @param pageNo
      * @param pageSize
      * @param sessionId
      * @return
      * @throws CustomException
      */
-    Map<String, Object> selectsAll(Integer pageNo,Integer pageSize,String sessionId)throws CustomException;
+    Map<String, Object> selectsAll(Boolean needPermission,Integer pageNo,Integer pageSize,String sessionId)throws CustomException;
 }

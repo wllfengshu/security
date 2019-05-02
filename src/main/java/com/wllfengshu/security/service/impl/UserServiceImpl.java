@@ -57,12 +57,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> selectsAll(Integer pageNo,Integer pageSize,String sessionId)throws CustomException {
-        logger.info("selectsAll pageNo:{},pageSize:{},sessionId",pageNo,pageSize,sessionId);
+    public Map<String, Object> selectsAll(Boolean needRole,Boolean needRoleAndPermission,Integer pageNo,Integer pageSize,String sessionId)throws CustomException {
+        logger.info("selectsAll needRole:{},needRoleAndPermission:{},pageNo:{},pageSize:{},sessionId",needRole,needRoleAndPermission,pageNo,pageSize,sessionId);
         Map<String, Object> result = new HashMap<>();
-        PageInfo<User> pageInfo = PageHelper.startPage(pageNo, pageSize)
-                                            .setOrderBy("id desc")
-                                            .doSelectPageInfo(() -> this.userDao.selectAll());
+        PageHelper.startPage(pageNo, pageSize);
+        PageInfo<User> pageInfo = null;
+        if (needRoleAndPermission){
+            pageInfo = new PageInfo<>(userDao.selectAllAndRoleAndPermission());
+        }else if(needRole){
+            pageInfo = new PageInfo<>(userDao.selectAllAndRole());
+        }else {
+            pageInfo = new PageInfo<>(userDao.selectAll());
+        }
         result.put("data",pageInfo.getList());
         result.put("total",pageInfo.getTotal());
         return result;

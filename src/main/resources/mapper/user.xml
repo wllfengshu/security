@@ -2,22 +2,58 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wllfengshu.security.dao.UserDao">
 
-    <resultMap type="com.wllfengshu.security.model.User" id="resultMap">
-        <result property="id" column="id"></result>
-        <result property="username" column="username"></result>
-        <result property="password" column="password"></result>
+    <resultMap id="resultUserAndRoleAndPermission" type="com.wllfengshu.security.model.User">
+        <result property="id" column="u_id"></result>
+        <result property="username" column="u_username"></result>
+        <result property="password" column="u_password"></result>
+        <collection property="roles" ofType="com.wllfengshu.security.model.Role"
+                    javaType="java.util.List" select="com.wllfengshu.security.dao.UserDao.selectRoleAndPermission" column="u_id">
+        </collection>
     </resultMap>
 
-    <sql id="selectUsersWhere">
-        <if test="id!=null and id!=''">
-            AND id = #{id}
-        </if>
-        <if test="username!=null and username!=''">
-            AND username = #{username}
-        </if>
-        <if test="password!=null and password!=''">
-            AND password = #{password}
-        </if>
-    </sql>
+    <resultMap id="resultUserAndRole" type="com.wllfengshu.security.model.User">
+        <result property="id" column="u_id"></result>
+        <result property="username" column="u_username"></result>
+        <result property="password" column="u_password"></result>
+        <collection property="roles" ofType="com.wllfengshu.security.model.Role"
+                    javaType="java.util.List" select="com.wllfengshu.security.dao.UserDao.selectRole" column="u_id">
+        </collection>
+    </resultMap>
+
+    <resultMap id="resultRole" type="com.wllfengshu.security.model.Role">
+        <result property="id" column="r_id"></result>
+        <result property="name" column="r_name"></result>
+        <result property="description" column="r_description"></result>
+    </resultMap>
+
+    <select id="selectRoleAndPermission" resultMap="com.wllfengshu.security.dao.RoleDao.resultRoleAndPermission" parameterType="java.lang.Integer">
+        SELECT
+            r.id r_id,r.`name` r_name,r.description r_description
+        FROM t_user_role ur
+        LEFT JOIN t_role r ON ur.role_id = r.id
+        WHERE ur.user_id = #{u_id}
+    </select>
+
+    <select id="selectRole" resultMap="com.wllfengshu.security.dao.UserDao.resultRole" parameterType="java.lang.Integer">
+        SELECT
+            r.id r_id,r.`name` r_name,r.description r_description
+        FROM t_user_role ur
+        LEFT JOIN t_role r ON ur.role_id = r.id
+        WHERE ur.user_id = #{u_id}
+    </select>
+
+    <!--以上都是子查询和返回的结果集；以下都是和dao接口对应的方法-->
+
+    <select id="selectAllAndRoleAndPermission" resultMap="com.wllfengshu.security.dao.UserDao.resultUserAndRoleAndPermission">
+        SELECT
+            u.id u_id,u.username u_username,u.password u_password
+        FROM t_user u
+    </select>
+
+    <select id="selectAllAndRole" resultMap="com.wllfengshu.security.dao.UserDao.resultUserAndRole">
+        SELECT
+            u.id u_id,u.username u_username,u.password u_password
+        FROM t_user u
+    </select>
 
 </mapper>

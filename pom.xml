@@ -69,6 +69,11 @@
             <version>1.2.36</version>
         </dependency>
         <dependency>
+            <groupId>org.projectlombok</groupId><!--实体类简化工具类-->
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId><!--工具包-->
             <version>3.4</version>

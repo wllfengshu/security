@@ -52,7 +52,6 @@ public class PermissionServiceImpl implements PermissionService {
     public Map<String, Object> select(Integer id, String sessionId)throws CustomException {
         logger.info("select id:{}",id);
         Map<String, Object> result = new HashMap<>();
-
         result.put("data",permissionDao.selectByPrimaryKey(id));
         return result;
     }
@@ -62,7 +61,6 @@ public class PermissionServiceImpl implements PermissionService {
         logger.info("selectsAll pageNo:{},pageSize:{},sessionId",pageNo,pageSize,sessionId);
         Map<String, Object> result = new HashMap<>();
         PageInfo<Permission> pageInfo = PageHelper.startPage(pageNo, pageSize)
-                .setOrderBy("id desc")
                 .doSelectPageInfo(() -> this.permissionDao.selectAll());
         result.put("data",pageInfo.getList());
         result.put("total",pageInfo.getTotal());

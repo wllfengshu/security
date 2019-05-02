@@ -57,12 +57,17 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Map<String, Object> selectsAll(Integer pageNo,Integer pageSize,String sessionId)throws CustomException {
-        logger.info("selectsAll pageNo:{},pageSize:{},sessionId",pageNo,pageSize,sessionId);
+    public Map<String, Object> selectsAll(Boolean needPermission,Integer pageNo,Integer pageSize,String sessionId)throws CustomException {
+        logger.info("selectsAll needPermission:{},pageNo:{},pageSize:{},sessionId",needPermission,pageNo,pageSize,sessionId);
         Map<String, Object> result = new HashMap<>();
-        PageInfo<Role> pageInfo = PageHelper.startPage(pageNo, pageSize)
-                .setOrderBy("id desc")
-                .doSelectPageInfo(() -> this.roleDao.selectAll());
+        PageInfo<Role> pageInfo = null;
+        if (needPermission){
+            pageInfo = PageHelper.startPage(pageNo, pageSize)
+                    .doSelectPageInfo(() -> this.roleDao.selectAllAndPermission());
+        }else {
+            pageInfo = PageHelper.startPage(pageNo, pageSize)
+                    .doSelectPageInfo(() -> this.roleDao.selectAll());
+        }
         result.put("data",pageInfo.getList());
         result.put("total",pageInfo.getTotal());
         return result;

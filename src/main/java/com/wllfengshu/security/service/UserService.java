@@ -53,11 +53,13 @@ public interface UserService {
     /**
      * 查询所有
      *
+     * @param needRole
+     * @param needRoleAndPermission
      * @param pageNo
      * @param pageSize
      * @param sessionId
      * @return
      * @throws CustomException
      */
-    Map<String, Object> selectsAll(Integer pageNo,Integer pageSize,String sessionId)throws CustomException;
+    Map<String, Object> selectsAll(Boolean needRole,Boolean needRoleAndPermission,Integer pageNo,Integer pageSize,String sessionId)throws CustomException;
 }

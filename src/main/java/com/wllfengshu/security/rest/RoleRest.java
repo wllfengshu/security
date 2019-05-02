@@ -93,6 +93,7 @@ public class RoleRest {
 
     @ApiOperation(value = "查询所有", httpMethod = "GET")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "needPermission", value = "是否需要权限（默认false）", dataType = "boolean", paramType = "query"),
             @ApiImplicitParam(name = "pageNo", value = "页数(从0开始，默认0)", dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页的数量(默认10)", dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "sessionId", value = "SessionId", required = true, dataType = "string", paramType = "header")
@@ -102,12 +103,13 @@ public class RoleRest {
     })
     @RequestMapping(value = "/",method = RequestMethod.GET)
     public Map<String, Object> selectsAll(
+            @RequestParam(value = "needPermission",required = false,defaultValue = "false") Boolean needPermission,
             @RequestParam(value = "pageNo",required = false,defaultValue = "0") Integer pageNo,
             @RequestParam(value = "pageSize",required = false,defaultValue = "10") Integer pageSize,
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("selectsAll pageNo:{},pageSize:{},sessionId",pageNo,pageSize,sessionId);
-        return roleService.selectsAll(pageNo,pageSize,sessionId);
+        logger.info("selectsAll needPermission:{},pageNo:{},pageSize:{},sessionId",needPermission,pageNo,pageSize,sessionId);
+        return roleService.selectsAll(needPermission,pageNo,pageSize,sessionId);
     }
 }

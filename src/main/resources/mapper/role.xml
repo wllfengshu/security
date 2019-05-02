@@ -2,22 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wllfengshu.security.dao.RoleDao">
 
-    <resultMap type="com.wllfengshu.security.model.Role" id="resultMap">
-        <result property="id" column="id"></result>
-        <result property="name" column="name"></result>
-        <result property="description" column="description"></result>
+    <resultMap id="resultRoleAndPermission" type="com.wllfengshu.security.model.Role">
+        <result property="id" column="r_id"></result>
+        <result property="name" column="r_name"></result>
+        <result property="description" column="r_description"></result>
+        <collection property="permissions" ofType="com.wllfengshu.security.model.Permission"
+                    javaType="java.util.List" select="com.wllfengshu.security.dao.RoleDao.selectPermission" column="r_id">
+        </collection>
     </resultMap>
 
-    <sql id="selectRolesWhere">
-        <if test="id!=null and id!=''">
-            AND id = #{id}
-        </if>
-        <if test="name!=null and name!=''">
-            AND `name` = #{name}
-        </if>
-        <if test="description!=null and description!=''">
-            AND description = #{description}
-        </if>
-    </sql>
+    <resultMap id="resultPermission" type="com.wllfengshu.security.model.Permission">
+        <result property="id" column="p_id"></result>
+        <result property="name" column="p_name"></result>
+        <result property="description" column="p_description"></result>
+    </resultMap>
+
+    <select id="selectPermission" resultMap="com.wllfengshu.security.dao.RoleDao.resultPermission" parameterType="java.lang.Integer">
+        SELECT
+            p.id p_id,p.`name` p_name,p.description p_description
+        FROM t_role_permission rp
+        LEFT JOIN t_permission p ON rp.permission_id = p.id
+        WHERE rp.role_id = #{r_id}
+    </select>
+
+    <!--以上都是子查询和返回的结果集；以下都是和dao接口对应的方法-->
+
+    <select id="selectAllAndPermission" resultMap="com.wllfengshu.security.dao.RoleDao.resultRoleAndPermission">
+        SELECT
+            r.id r_id,r.`name` r_name,r.description r_description
+        FROM t_role r
+    </select>
 
 </mapper>
