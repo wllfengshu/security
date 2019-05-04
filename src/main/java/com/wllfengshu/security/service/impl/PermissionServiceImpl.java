@@ -57,8 +57,8 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Map<String, Object> selectsAll(Integer pageNo,Integer pageSize,String sessionId)throws CustomException {
-        logger.info("selectsAll pageNo:{},pageSize:{},sessionId",pageNo,pageSize,sessionId);
+    public Map<String, Object> selectAll(Integer pageNo,Integer pageSize,String sessionId)throws CustomException {
+        logger.info("selectAll pageNo:{},pageSize:{},sessionId",pageNo,pageSize,sessionId);
         Map<String, Object> result = new HashMap<>();
         PageInfo<Permission> pageInfo = PageHelper.startPage(pageNo, pageSize)
                 .doSelectPageInfo(() -> this.permissionDao.selectAll());

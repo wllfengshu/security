@@ -43,12 +43,14 @@ public interface UserService {
     /**
      * 按ID查询
      *
+     * @param needRole
+     * @param needRoleAndPermission
      * @param id
      * @param sessionId
      * @return
      * @throws CustomException
      */
-    Map<String, Object> select(Integer id, String sessionId)throws CustomException;
+    Map<String, Object> select(Boolean needRole,Boolean needRoleAndPermission,Integer id, String sessionId)throws CustomException;
 
     /**
      * 查询所有
@@ -61,5 +63,5 @@ public interface UserService {
      * @return
      * @throws CustomException
      */
-    Map<String, Object> selectsAll(Boolean needRole,Boolean needRoleAndPermission,Integer pageNo,Integer pageSize,String sessionId)throws CustomException;
+    Map<String, Object> selectAll(Boolean needRole,Boolean needRoleAndPermission,Integer pageNo,Integer pageSize,String sessionId)throws CustomException;
 }

@@ -4,6 +4,7 @@ import com.wllfengshu.security.exception.CustomException;
 import com.wllfengshu.security.model.User;
 import com.wllfengshu.security.service.UserService;
 import io.swagger.annotations.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class UserRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/user", method = RequestMethod.POST)
+    @RequiresPermissions("insertUser")
     public Map<String, Object> insert(
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
@@ -49,6 +51,7 @@ public class UserRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
+    @RequiresPermissions("deleteUser")
     public Map<String, Object> delete(
             @PathVariable("id") Integer id,
             @RequestHeader(value = "sessionId") String sessionId,
@@ -64,6 +67,7 @@ public class UserRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/user", method = RequestMethod.PUT)
+    @RequiresPermissions("updateUser")
     public Map<String, Object> update(
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
@@ -75,6 +79,8 @@ public class UserRest {
 
     @ApiOperation(value = "按ID查询", httpMethod = "GET")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "needRole", value = "是否需要角色（默认false）", dataType = "boolean", paramType = "query"),
+            @ApiImplicitParam(name = "needRoleAndPermission", value = "是否需要角色和权限（默认false）", dataType = "boolean", paramType = "query"),
             @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "int", paramType = "path"),
             @ApiImplicitParam(name = "sessionId", value = "SessionId", required = true, dataType = "string", paramType = "header")
     })
@@ -82,13 +88,16 @@ public class UserRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    @RequiresPermissions("selectUser")
     public Map<String, Object> select(
+            @RequestParam(value = "needRole",required = false,defaultValue = "false") Boolean needRole,
+            @RequestParam(value = "needRoleAndPermission",required = false,defaultValue = "false") Boolean needRoleAndPermission,
             @PathVariable("id") Integer id,
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("select id:{}",id);
-        return userService.select(id,sessionId);
+        logger.info("select needRole:{},needRoleAndPermission:{},id:{}",id);
+        return userService.select(needRole,needRoleAndPermission,id,sessionId);
     }
 
     @ApiOperation(value = "查询所有", httpMethod = "GET")
@@ -103,7 +112,8 @@ public class UserRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    public Map<String, Object> selectsAll(
+    @RequiresPermissions("selectAllUser")
+    public Map<String, Object> selectAll(
             @RequestParam(value = "needRole",required = false,defaultValue = "false") Boolean needRole,
             @RequestParam(value = "needRoleAndPermission",required = false,defaultValue = "false") Boolean needRoleAndPermission,
             @RequestParam(value = "pageNo",required = false,defaultValue = "0") Integer pageNo,
@@ -111,7 +121,7 @@ public class UserRest {
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("selectsAll needRole:{},needRoleAndPermission:{},pageNo:{},pageSize:{},sessionId",needRole,needRoleAndPermission,pageNo,pageSize,sessionId);
-        return userService.selectsAll(needRole,needRoleAndPermission,pageNo,pageSize,sessionId);
+        logger.info("selectAll needRole:{},needRoleAndPermission:{},pageNo:{},pageSize:{},sessionId",needRole,needRoleAndPermission,pageNo,pageSize,sessionId);
+        return userService.selectAll(needRole,needRoleAndPermission,pageNo,pageSize,sessionId);
     }
 }

@@ -28,7 +28,7 @@ public class SecurityRest {
     @ApiOperation(value = "登陆", httpMethod = "POST")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String, Object> login(
-            @ApiParam(value = "用户名和密码") @RequestBody LoginVo loginVo,
+            @ApiParam(value = "用户名和密码",required = true) @RequestBody LoginVo loginVo,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
         logger.info("login loginVo:{}",loginVo);
@@ -38,7 +38,7 @@ public class SecurityRest {
     @ApiOperation(value = "登出", httpMethod = "GET")
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public Map<String, Object> logout(
-            @ApiParam(value = "SessionId") @RequestHeader("sessionId") String sessionId,
+            @ApiParam(value = "SessionId" ,required = true) @RequestHeader("sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException{
         logger.info("logout sessionId:{}",sessionId);
@@ -48,7 +48,7 @@ public class SecurityRest {
     @ApiOperation(value = "心跳", httpMethod = "GET")
     @RequestMapping(value = "/touch", method = RequestMethod.GET)
     public Map<String, Object> touch(
-            @ApiParam(value = "SessionId") @RequestHeader("sessionId") String sessionId,
+            @ApiParam(value = "SessionId" ,required = true) @RequestHeader("sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException{
         logger.info("touch sessionId:{}",sessionId);

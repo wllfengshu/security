@@ -17,20 +17,24 @@ public class CustomException extends Exception {
 
         //操作失败,错误未知，请联系系统管理员
         OperationFailed(10000),
+        //用户名不能为空
+        NeedUsername(10001),
+        //密码不能为空
+        NeedPassword(10002),
         //用户名不存在
-        UnknownAccountException(10001),
+        UnknownAccountException(10003),
         //用户名或密码错误
-        IncorrectCredentialsException(10002),
+        IncorrectCredentialsException(10004),
         //账户被锁定
-        LockedAccountException(10003),
+        LockedAccountException(10005),
         //过度尝试异常
-        ExcessiveAttemptsException(10004),
+        ExcessiveAttemptsException(10006),
         //身份验证异常
-        AuthenticationException(10005),
+        AuthenticationException(10007),
         //未登陆，无法操作
-        NotLoginError(10006),
+        NotLoginError(10008),
         //已登陆，但sessionId不匹配
-        LoginedButMismatchSessionId(10007)
+        LoginButMismatchSessionId(10009)
         ;
 
         private int code;

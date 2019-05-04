@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,21 +50,28 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Map<String, Object> select(Integer id, String sessionId)throws CustomException {
-        logger.info("select id:{}",id);
+    public Map<String, Object> select(Boolean needPermission,Integer id, String sessionId)throws CustomException {
+        logger.info("select needPermission:{},id:{}",needPermission,id);
         Map<String, Object> result = new HashMap<>();
-        result.put("data",roleDao.selectByPrimaryKey(id));
+        if (needPermission){
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("id",id);
+            List<Role> roles = roleDao.selectRoleAndPermission(condition);
+            result.put("data",(roles==null || roles.size()<=0)?null:roles.get(0));
+        }else {
+            result.put("data",roleDao.selectByPrimaryKey(id));
+        }
         return result;
     }
 
     @Override
-    public Map<String, Object> selectsAll(Boolean needPermission,Integer pageNo,Integer pageSize,String sessionId)throws CustomException {
-        logger.info("selectsAll needPermission:{},pageNo:{},pageSize:{},sessionId",needPermission,pageNo,pageSize,sessionId);
+    public Map<String, Object> selectAll(Boolean needPermission,Integer pageNo,Integer pageSize,String sessionId)throws CustomException {
+        logger.info("selectAll needPermission:{},pageNo:{},pageSize:{},sessionId",needPermission,pageNo,pageSize,sessionId);
         Map<String, Object> result = new HashMap<>();
         PageInfo<Role> pageInfo = null;
         if (needPermission){
             pageInfo = PageHelper.startPage(pageNo, pageSize)
-                    .doSelectPageInfo(() -> this.roleDao.selectAllAndPermission());
+                    .doSelectPageInfo(() -> this.roleDao.selectRoleAndPermission(new HashMap<>()));
         }else {
             pageInfo = PageHelper.startPage(pageNo, pageSize)
                     .doSelectPageInfo(() -> this.roleDao.selectAll());

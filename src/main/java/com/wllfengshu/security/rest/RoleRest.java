@@ -4,6 +4,7 @@ import com.wllfengshu.security.exception.CustomException;
 import com.wllfengshu.security.model.Role;
 import com.wllfengshu.security.service.RoleService;
 import io.swagger.annotations.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class RoleRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/role", method = RequestMethod.POST)
+    @RequiresPermissions("insertRole")
     public Map<String, Object> insert(
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
@@ -49,6 +51,7 @@ public class RoleRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/role/{id}", method = RequestMethod.DELETE)
+    @RequiresPermissions("deleteRole")
     public Map<String, Object> delete(
             @PathVariable("id") Integer id,
             @RequestHeader(value = "sessionId") String sessionId,
@@ -64,6 +67,7 @@ public class RoleRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/role", method = RequestMethod.PUT)
+    @RequiresPermissions("updateRole")
     public Map<String, Object> update(
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
@@ -75,6 +79,7 @@ public class RoleRest {
 
     @ApiOperation(value = "按ID查询", httpMethod = "GET")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "needPermission", value = "是否需要权限（默认false）", dataType = "boolean", paramType = "query"),
             @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "int", paramType = "path"),
             @ApiImplicitParam(name = "sessionId", value = "SessionId", required = true, dataType = "string", paramType = "header")
     })
@@ -82,13 +87,15 @@ public class RoleRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/role/{id}", method = RequestMethod.GET)
+    @RequiresPermissions("selectRole")
     public Map<String, Object> select(
+            @RequestParam(value = "needPermission",required = false,defaultValue = "false") Boolean needPermission,
             @PathVariable("id") Integer id,
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("select id:{}",id);
-        return roleService.select(id,sessionId);
+        logger.info("select needPermission:{},id:{}",id);
+        return roleService.select(needPermission,id,sessionId);
     }
 
     @ApiOperation(value = "查询所有", httpMethod = "GET")
@@ -102,14 +109,15 @@ public class RoleRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    public Map<String, Object> selectsAll(
+    @RequiresPermissions("selectAllRole")
+    public Map<String, Object> selectAll(
             @RequestParam(value = "needPermission",required = false,defaultValue = "false") Boolean needPermission,
             @RequestParam(value = "pageNo",required = false,defaultValue = "0") Integer pageNo,
             @RequestParam(value = "pageSize",required = false,defaultValue = "10") Integer pageSize,
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("selectsAll needPermission:{},pageNo:{},pageSize:{},sessionId",needPermission,pageNo,pageSize,sessionId);
-        return roleService.selectsAll(needPermission,pageNo,pageSize,sessionId);
+        logger.info("selectAll needPermission:{},pageNo:{},pageSize:{},sessionId",needPermission,pageNo,pageSize,sessionId);
+        return roleService.selectAll(needPermission,pageNo,pageSize,sessionId);
     }
 }

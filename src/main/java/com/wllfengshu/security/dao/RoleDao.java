@@ -2,10 +2,10 @@ package com.wllfengshu.security.dao;
 
 import com.wllfengshu.security.model.Role;
 import com.wllfengshu.security.utils.MyMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wllfengshu
@@ -14,9 +14,10 @@ import java.util.List;
 public interface RoleDao extends MyMapper<Role> {
 
     /**
-     * 查询所有的角色和对应的权限
+     * 查询角色和对应的权限
+     * @param paramsMap
      * @return
      */
-    List<Role> selectAllAndPermission();
+    List<Role> selectRoleAndPermission(Map<String, Object> paramsMap);
 
 }

@@ -59,5 +59,5 @@ public interface PermissionService {
      * @return
      * @throws CustomException
      */
-    Map<String, Object> selectsAll(Integer pageNo,Integer pageSize,String sessionId)throws CustomException;
+    Map<String, Object> selectAll(Integer pageNo,Integer pageSize,String sessionId)throws CustomException;
 }

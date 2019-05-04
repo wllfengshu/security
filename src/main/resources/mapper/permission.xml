@@ -2,22 +2,4 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wllfengshu.security.dao.PermissionDao">
 
-    <resultMap type="com.wllfengshu.security.model.Permission" id="resultMap">
-        <result property="id" column="id"></result>
-        <result property="name" column="name"></result>
-        <result property="description" column="description"></result>
-    </resultMap>
-
-    <sql id="selectPermissionsWhere">
-        <if test="id!=null and id!=''">
-            AND id = #{id}
-        </if>
-        <if test="name!=null and name!=''">
-            AND `name` = #{name}
-        </if>
-        <if test="description!=null and description!=''">
-            AND description = #{description}
-        </if>
-    </sql>
-
 </mapper>

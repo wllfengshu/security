@@ -14,7 +14,10 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import tk.mybatis.mapper.entity.Example;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 自定义realm
@@ -39,6 +42,7 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal) {
         User user = (User) principal.getPrimaryPrincipal();
+        logger.debug("doGetAuthorizationInfo user:{}",user);
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         for (Role role : user.getRoles()) {
 			info.addRole(role.getName());
@@ -58,19 +62,19 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
-        Example example = new Example(User.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("username",upToken.getUsername());
-        User user = userDao.selectOneByExample(example);
-        if (user == null){
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("username",upToken.getUsername());
+        List<User> users = userDao.selectUserAndRoleAndPermission(condition);
+        logger.debug("doGetAuthenticationInfo user:{}",users);
+        if (users == null || users.size() <= 0){
             logger.error("用户不存在");
             throw new UnknownAccountException();
         }
-        if (!((String.valueOf(upToken.getPassword())).equals(user.getPassword()))){
+        if (!((String.valueOf(upToken.getPassword())).equals(users.get(0).getPassword()))){
             logger.error("用户名或密码错误");
             throw new IncorrectCredentialsException();
         }
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, user.getPassword(), getName());
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(users.get(0), users.get(0).getPassword(), getName());
         return info;
     }
 

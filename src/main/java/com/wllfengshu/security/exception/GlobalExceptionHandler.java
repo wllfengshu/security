@@ -34,8 +34,8 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public WebResponse exceptionHandler(Exception ex) {
         WebResponse webResponse = new WebResponse();
-        webResponse.setErrorCode(500);
-        webResponse.setErrorMessage(ClassUtils.getShortName(ex.getClass()));
+        webResponse.setErrorCode(401);
+        webResponse.setErrorMessage("没有权限");
         ex.printStackTrace();
         return webResponse;
     }

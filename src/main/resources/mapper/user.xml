@@ -44,16 +44,33 @@
 
     <!--以上都是子查询和返回的结果集；以下都是和dao接口对应的方法-->
 
-    <select id="selectAllAndRoleAndPermission" resultMap="com.wllfengshu.security.dao.UserDao.resultUserAndRoleAndPermission">
+    <sql id="selectUsersWhere">
+        <if test="_parameter.containsKey('id') and id!=null and id!=''">
+            AND u.id = #{id}
+        </if>
+        <if test="_parameter.containsKey('username') and username!=null and username!=''">
+            AND u.username = #{username}
+        </if>
+    </sql>
+
+    <select id="selectUserAndRoleAndPermission" parameterType="java.lang.Integer" resultMap="com.wllfengshu.security.dao.UserDao.resultUserAndRoleAndPermission">
         SELECT
             u.id u_id,u.username u_username,u.password u_password
         FROM t_user u
+        <where>
+            1=1
+            <include refid="selectUsersWhere"/>
+        </where>
     </select>
 
-    <select id="selectAllAndRole" resultMap="com.wllfengshu.security.dao.UserDao.resultUserAndRole">
+    <select id="selectUserAndRole" parameterType="java.lang.Integer" resultMap="com.wllfengshu.security.dao.UserDao.resultUserAndRole">
         SELECT
             u.id u_id,u.username u_username,u.password u_password
         FROM t_user u
+        <where>
+            1=1
+            <include refid="selectUsersWhere"/>
+        </where>
     </select>
 
 </mapper>

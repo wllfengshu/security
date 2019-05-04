@@ -27,10 +27,26 @@
 
     <!--以上都是子查询和返回的结果集；以下都是和dao接口对应的方法-->
 
-    <select id="selectAllAndPermission" resultMap="com.wllfengshu.security.dao.RoleDao.resultRoleAndPermission">
+    <sql id="selectRolesWhere">
+        <if test="_parameter.containsKey('id') and id!=null and id!=''">
+            AND r.id = #{id}
+        </if>
+        <if test="_parameter.containsKey('name') and name!=null and name!=''">
+            AND r.`name` = #{name}
+        </if>
+        <if test="_parameter.containsKey('description') and description!=null and description!=''">
+            AND r.description = #{description}
+        </if>
+    </sql>
+
+    <select id="selectRoleAndPermission" parameterType="java.lang.Integer" resultMap="com.wllfengshu.security.dao.RoleDao.resultRoleAndPermission">
         SELECT
             r.id r_id,r.`name` r_name,r.description r_description
         FROM t_role r
+        <where>
+            1=1
+            <include refid="selectRolesWhere"/>
+        </where>
     </select>
 
 </mapper>

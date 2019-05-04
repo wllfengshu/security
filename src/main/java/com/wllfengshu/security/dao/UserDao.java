@@ -5,6 +5,7 @@ import com.wllfengshu.security.utils.MyMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wllfengshu
@@ -13,14 +14,16 @@ import java.util.List;
 public interface UserDao extends MyMapper<User> {
 
     /**
-     * 查询所有的用户和对应的角色
+     * 查询用户和对应的角色
+     * @param paramsMap
      * @return
      */
-    List<User> selectAllAndRole();
+    List<User> selectUserAndRole(Map<String, Object> paramsMap);
 
     /**
-     * 查询所有的用户和对应的角色和权限
+     * 查询用户和对应的角色和权限
+     * @param paramsMap
      * @return
      */
-    List<User> selectAllAndRoleAndPermission();
+    List<User> selectUserAndRoleAndPermission(Map<String, Object> paramsMap);
 }
