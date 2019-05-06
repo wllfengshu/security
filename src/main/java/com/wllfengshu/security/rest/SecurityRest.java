@@ -54,4 +54,14 @@ public class SecurityRest {
         logger.info("touch sessionId:{}",sessionId);
         return securityService.touch(sessionId);
     }
+
+    @ApiOperation(value = "获取当前用户信息", httpMethod = "GET")
+    @RequestMapping(value = "/session", method = RequestMethod.GET)
+    public Map<String, Object> getCurrentBySession(
+            @ApiParam(value = "SessionId" ,required = true) @RequestHeader("sessionId") String sessionId,
+            HttpServletRequest request,
+            HttpServletResponse response)throws CustomException{
+        logger.info("getCurrentBySession sessionId:{}",sessionId);
+        return securityService.getCurrentBySession(sessionId);
+    }
 }

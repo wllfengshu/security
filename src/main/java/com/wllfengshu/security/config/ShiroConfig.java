@@ -1,12 +1,27 @@
 package com.wllfengshu.security.config;
 
+import com.wllfengshu.security.cache.ShiroRedisCacheManager;
+import com.wllfengshu.security.cache.ShiroRedisSessionDao;
 import com.wllfengshu.security.shiro.CustomRealm;
-import org.apache.shiro.realm.Realm;
-import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
-import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
+import com.wllfengshu.security.utils.CollectionSerializer;
+import org.apache.shiro.codec.Base64;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
+
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 配置shiro
@@ -17,12 +32,31 @@ import org.springframework.context.annotation.Configuration;
 public class ShiroConfig {
 
     /**
-     * 注入自定义的realm，告诉shiro如何获取用户信息来做登录或权限控制
+     * 安全管理器
+     *
      * @return
      */
     @Bean
-    public Realm realm() {
-        return new CustomRealm();
+    public DefaultWebSecurityManager securityManager(RedisTemplate redisTemplate, RedisCacheManager redisCacheManager) {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        securityManager.setRealm(getCustomRealm(redisCacheManager));
+        securityManager.setCacheManager(getShiroRedisCacheManager(redisCacheManager));
+        securityManager.setRememberMeManager(getRememberMeManager());
+        securityManager.setSessionManager(getSessionManager(redisTemplate));
+        return securityManager;
+    }
+
+    /**
+     * 缓存管理器的配置
+     *
+     * @param redisCacheManager
+     * @return
+     */
+    @Bean
+    public ShiroRedisCacheManager getShiroRedisCacheManager(RedisCacheManager redisCacheManager) {
+        ShiroRedisCacheManager cacheManager = new ShiroRedisCacheManager();
+        cacheManager.setCacheManager(redisCacheManager);
+        return cacheManager;
     }
 
     /**
@@ -31,17 +65,95 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public ShiroFilterChainDefinition shiroFilterChainDefinition() {
-        DefaultShiroFilterChainDefinition chain = new DefaultShiroFilterChainDefinition();
-        chain.addPathDefinition("/login", "anon");
-        chain.addPathDefinition("/swagger-ui.html*", "anon");
-        chain.addPathDefinition("/webjars/**", "anon");
-        chain.addPathDefinition("/v2/**", "anon");
-        chain.addPathDefinition("/configuration/**", "anon");
-        chain.addPathDefinition("/swagger-resources/**", "anon");
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+        ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
+        factoryBean.setSecurityManager(securityManager);
+        Map<String, String> filters = new LinkedHashMap<>();
+        filters.put("/login", "anon");
+        filters.put("/swagger-ui.html*", "anon");
+        filters.put("/webjars/**", "anon");
+        filters.put("/v2/**", "anon");
+        filters.put("/configuration/**", "anon");
+        filters.put("/swagger-resources/**", "anon");
+        filters.put("/druid/**", "anon");
         //除了以上的请求外，其它请求都需要登录
-        chain.addPathDefinition("/**", "authc");
-        return chain;
+        filters.put("/**", "authc");
+        factoryBean.setFilterChainDefinitionMap(filters);
+        return factoryBean;
+    }
+
+    /**
+     * 注入自定义的realm，告诉shiro如何获取用户信息来做登录或权限控制
+     * @return
+     */
+    @Bean
+    public CustomRealm getCustomRealm(RedisCacheManager redisCacheManager) {
+        CustomRealm realm = new CustomRealm();
+        realm.setCachingEnabled(true);
+        realm.setCacheManager(getShiroRedisCacheManager(redisCacheManager));
+        //认证
+        realm.setAuthenticationCachingEnabled(true);
+        //授权
+        realm.setAuthorizationCachingEnabled(true);
+        realm.setAuthenticationCacheName("fulinauthen");
+        realm.setAuthorizationCacheName("fulinauthor");
+        return realm;
+    }
+
+    /**
+     * 管理shiro bean生命周期
+     * @return
+     */
+    @Bean
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
+
+    /**
+     * 配置Cookie的生成模版(cookie的name，cookie的有效时间)
+     * @return
+     */
+    @Bean
+    public SimpleCookie getRememberMeCookie() {
+        //这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
+        SimpleCookie cookie = new SimpleCookie("rememberMe");
+        //记住我cookie生效时间30天 ,单位秒
+        cookie.setMaxAge(259200);
+        return cookie;
+    }
+
+    /**
+     * 配置rememberMeManager
+     * @return
+     */
+    @Bean
+    public CookieRememberMeManager getRememberMeManager() {
+        CookieRememberMeManager meManager = new CookieRememberMeManager();
+        meManager.setCookie(getRememberMeCookie());
+        //rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度(128 256 512 位)
+        meManager.setCipherKey(Base64.decode("2AvVhdsgUs0FSA3SDFAdag=="));
+        return meManager;
+    }
+
+    /**
+     * 配置sessionManager，由redis存储数据
+     */
+    @Bean
+    @DependsOn(value = "lifecycleBeanPostProcessor")
+    public DefaultWebSessionManager getSessionManager(RedisTemplate redisTemplate) {
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        CollectionSerializer<Serializable> collectionSerializer = CollectionSerializer.getInstance();
+        redisTemplate.setDefaultSerializer(collectionSerializer);
+        //redisTemplate默认采用的其实是valueSerializer
+        redisTemplate.setValueSerializer(collectionSerializer);
+        ShiroRedisSessionDao redisSessionDao = new ShiroRedisSessionDao(redisTemplate);
+        sessionManager.setSessionDAO(redisSessionDao);
+        sessionManager.setDeleteInvalidSessions(true);
+        SimpleCookie cookie = new SimpleCookie();
+        cookie.setName("securityCookie");
+        sessionManager.setSessionIdCookie(cookie);
+        sessionManager.setSessionIdCookieEnabled(true);
+        return sessionManager;
     }
 
     /**
@@ -56,4 +168,5 @@ public class ShiroConfig {
         creator.setUsePrefix(true);
         return creator;
     }
+
 }

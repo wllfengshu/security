@@ -28,6 +28,7 @@ https://blog.csdn.net/baidu_38116275/article/details/78622669
 https://blog.csdn.net/yu514950381/article/details/82491127
 - 5、springboot+shiro的start方式使用教程
 https://segmentfault.com/a/1190000014479154
+https://blog.csdn.net/qq_32867467/article/details/83045505
 - 6、基于redis的会话管理
 https://blog.csdn.net/xieliaowa9231/article/details/78995465
 

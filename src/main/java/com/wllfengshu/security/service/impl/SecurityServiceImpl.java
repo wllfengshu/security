@@ -1,6 +1,7 @@
 package com.wllfengshu.security.service.impl;
 
 import com.wllfengshu.security.exception.CustomException;
+import com.wllfengshu.security.model.User;
 import com.wllfengshu.security.model.vo.LoginVo;
 import com.wllfengshu.security.service.SecurityService;
 import org.apache.commons.lang3.StringUtils;
@@ -88,6 +89,27 @@ public class SecurityServiceImpl implements SecurityService {
             throw new CustomException("操作失败,错误未知，请联系系统管理员", CustomException.ExceptionName.OperationFailed);
         }
         result.put("touch","success");
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> getCurrentBySession(String sessionId) throws CustomException {
+        logger.info("getCurrentBySession sessionId:{}",sessionId);
+        Map<String, Object> result = new HashMap<>();
+        if (SecurityUtils.getSubject().getSession(false) == null){
+            throw new CustomException("未登陆，无法操作", CustomException.ExceptionName.NotLoginError);
+        }
+        if (!((String.valueOf(SecurityUtils.getSubject().getSession().getId())).equals(sessionId))){
+            throw new CustomException("已登陆，但sessionId不匹配", CustomException.ExceptionName.LoginButMismatchSessionId);
+        }
+        User user = null;
+        try {
+            user = (User)SecurityUtils.getSubject().getPrincipal();
+        } catch (Exception e){
+            logger.error("login error",e);
+            throw new CustomException("操作失败,错误未知，请联系系统管理员", CustomException.ExceptionName.OperationFailed);
+        }
+        result.put("data",user);
         return result;
     }
 }

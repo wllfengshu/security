@@ -34,4 +34,12 @@ public interface SecurityService {
      */
     Map<String, Object> touch(String sessionId) throws CustomException;
 
+    /**
+     * 获取当前用户信息
+     * @param sessionId
+     * @throws CustomException
+     * @return
+     */
+    Map<String, Object> getCurrentBySession(String sessionId) throws CustomException;
+
 }
