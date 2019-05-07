@@ -10,7 +10,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 /**
  * 缓存管理器
  *
- * @author
+ * @author maoxs
  */
 @Slf4j
 public class ShiroRedisCacheManager implements CacheManager, Destroyable {

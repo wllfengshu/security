@@ -1,7 +1,7 @@
 # 权限管理
 
 > 包含如下内容：
-> 1、登陆、登出、心跳
+> 1、登陆、登出、心跳、查询当前登陆的用户信息
 > 2、用户管理
 > 3、角色管理
 > 4、权限管理
@@ -18,18 +18,19 @@
 在查询这10个角色对应的权限时，会发出10+1个sql。
 
 > 参考：
-- 1、shiro的demo
+- 1、shiro的demo  
 https://github.com/CaiBaoHong/elegant-shiro-boot/
-- 2、springboot+shiro官网教程
+- 2、springboot+shiro官网教程  
 http://shiro.apache.org/spring-boot.html
-- 3、mybatis中collection一对多关联查询分页出错
+- 3、mybatis中collection一对多关联查询分页出错  
 https://blog.csdn.net/baidu_38116275/article/details/78622669
-- 4、mybatis中collection子查询不执行
+- 4、mybatis中collection子查询不执行  
 https://blog.csdn.net/yu514950381/article/details/82491127
-- 5、springboot+shiro的start方式使用教程
-https://segmentfault.com/a/1190000014479154
+- 5、springboot+shiro的start方式使用教程  
+https://segmentfault.com/a/1190000014479154  
 https://blog.csdn.net/qq_32867467/article/details/83045505
-- 6、基于redis的会话管理
+- 6、基于redis的会话管理  
 https://blog.csdn.net/xieliaowa9231/article/details/78995465
-
+- 7、多次从redis获取session问题  
+https://blog.csdn.net/lianyuecheng/article/details/81663269
 

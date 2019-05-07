@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 配置druid
  *
- * @author wllfengshu
+ * @author littlebird
  */
 @Configuration
 public class DruidConfig {

@@ -6,8 +6,7 @@ import com.wllfengshu.security.dao.RoleDao;
 import com.wllfengshu.security.exception.CustomException;
 import com.wllfengshu.security.model.Role;
 import com.wllfengshu.security.service.RoleService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +18,15 @@ import java.util.Map;
  * @author wllfengshu
  */
 @Service
+@Slf4j
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
     private RoleDao roleDao;
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public Map<String, Object> insert(Role entity, String sessionId)throws CustomException {
-        logger.info("insert entity:{}",entity);
+        log.info("insert entity:{}",entity);
         Map<String, Object> result = new HashMap<>();
         roleDao.insert(entity);
         return result;
@@ -35,7 +34,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Map<String, Object> delete(Integer id, String sessionId)throws CustomException {
-        logger.info("delete id:{}",id);
+        log.info("delete id:{}",id);
         Map<String, Object> result = new HashMap<>();
         roleDao.deleteByPrimaryKey(id);
         return result;
@@ -43,7 +42,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Map<String, Object> update(Role entity, String sessionId)throws CustomException {
-        logger.info("update entity:{}",entity);
+        log.info("update entity:{}",entity);
         Map<String, Object> result = new HashMap<>();
         roleDao.updateByPrimaryKey(entity);
         return result;
@@ -51,7 +50,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Map<String, Object> select(Boolean needPermission,Integer id, String sessionId)throws CustomException {
-        logger.info("select needPermission:{},id:{}",needPermission,id);
+        log.info("select needPermission:{},id:{}",needPermission,id);
         Map<String, Object> result = new HashMap<>();
         if (needPermission){
             Map<String, Object> condition = new HashMap<>();
@@ -66,15 +65,14 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Map<String, Object> selectAll(Boolean needPermission,Integer pageNo,Integer pageSize,String sessionId)throws CustomException {
-        logger.info("selectAll needPermission:{},pageNo:{},pageSize:{},sessionId",needPermission,pageNo,pageSize,sessionId);
+        log.info("selectAll needPermission:{},pageNo:{},pageSize:{},sessionId",needPermission,pageNo,pageSize,sessionId);
         Map<String, Object> result = new HashMap<>();
+        PageHelper.startPage(pageNo, pageSize);
         PageInfo<Role> pageInfo = null;
         if (needPermission){
-            pageInfo = PageHelper.startPage(pageNo, pageSize)
-                    .doSelectPageInfo(() -> this.roleDao.selectRoleAndPermission(new HashMap<>()));
+            pageInfo = new PageInfo<>(roleDao.selectRoleAndPermission(new HashMap<>()));
         }else {
-            pageInfo = PageHelper.startPage(pageNo, pageSize)
-                    .doSelectPageInfo(() -> this.roleDao.selectAll());
+            pageInfo = new PageInfo<>(roleDao.selectAll());
         }
         result.put("data",pageInfo.getList());
         result.put("total",pageInfo.getTotal());

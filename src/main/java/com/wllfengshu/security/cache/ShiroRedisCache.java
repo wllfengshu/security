@@ -12,9 +12,7 @@ import java.util.Set;
 /**
  * 自定义缓存 将数据存入到redis中
  *
- * @param <K>
- * @param <V>
- * @author wllfengshu
+ * @author maoxs
  */
 @Slf4j
 public class ShiroRedisCache<K, V> implements org.apache.shiro.cache.Cache<K, V> {

@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 存储Session
  *
- * @author
+ * @author maoxs
  */
 @Slf4j
 public class ShiroRedisSessionDao extends AbstractSessionDAO {

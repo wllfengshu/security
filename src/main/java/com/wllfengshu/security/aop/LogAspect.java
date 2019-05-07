@@ -1,5 +1,6 @@
 package com.wllfengshu.security.aop;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,9 +15,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Aspect
+@Slf4j
 public class LogAspect {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 当sql执行时间超过该值时，进行warn级别的打印
@@ -36,9 +36,9 @@ public class LogAspect {
         Object result = joinPoint.proceed();
         long costTime = System.currentTimeMillis() - startTime;
         if (costTime > WARN_WHEN_OVER_TIME) {
-            logger.warn("execute sql : {} costTime: [{}] ms", joinPoint.getSignature().getName(), costTime);
+            log.warn("execute sql : {} costTime: [{}] ms", joinPoint.getSignature().getName(), costTime);
         } else {
-            logger.info("execute sql : {} costTime: [{}] ms", joinPoint.getSignature().getName(), costTime);
+            log.info("execute sql : {} costTime: [{}] ms", joinPoint.getSignature().getName(), costTime);
         }
         return result;
     }
@@ -55,7 +55,7 @@ public class LogAspect {
         long startTime = System.currentTimeMillis();
         Object result = joinPoint.proceed();
         long costTime = System.currentTimeMillis() - startTime;
-        logger.info("request: {} cost: {}", joinPoint.getSignature().getName(), costTime);
+        log.info("request: {} cost: {}", joinPoint.getSignature().getName(), costTime);
         return result;
     }
 

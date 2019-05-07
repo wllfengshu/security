@@ -2,6 +2,7 @@ package com.wllfengshu.security.config;
 
 import com.wllfengshu.security.cache.ShiroRedisCacheManager;
 import com.wllfengshu.security.cache.ShiroRedisSessionDao;
+import com.wllfengshu.security.cache.ShiroSessionManager;
 import com.wllfengshu.security.shiro.CustomRealm;
 import com.wllfengshu.security.utils.CollectionSerializer;
 import org.apache.shiro.codec.Base64;
@@ -26,7 +27,7 @@ import java.util.Map;
 /**
  * 配置shiro
  *
- * @author wllfengshu
+ * @author maoxs
  */
 @Configuration
 public class ShiroConfig {
@@ -141,7 +142,7 @@ public class ShiroConfig {
     @Bean
     @DependsOn(value = "lifecycleBeanPostProcessor")
     public DefaultWebSessionManager getSessionManager(RedisTemplate redisTemplate) {
-        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        ShiroSessionManager sessionManager = new ShiroSessionManager();
         CollectionSerializer<Serializable> collectionSerializer = CollectionSerializer.getInstance();
         redisTemplate.setDefaultSerializer(collectionSerializer);
         //redisTemplate默认采用的其实是valueSerializer

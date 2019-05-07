@@ -6,8 +6,7 @@ import com.wllfengshu.security.dao.UserDao;
 import com.wllfengshu.security.exception.CustomException;
 import com.wllfengshu.security.model.User;
 import com.wllfengshu.security.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +18,15 @@ import java.util.Map;
  * @author wllfengshu
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public Map<String, Object> insert(User entity, String sessionId)throws CustomException {
-        logger.info("insert entity:{}",entity);
+        log.info("insert entity:{}",entity);
         Map<String, Object> result = new HashMap<>();
         userDao.insert(entity);
         return result;
@@ -35,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> delete(Integer id, String sessionId)throws CustomException {
-        logger.info("delete id:{}",id);
+        log.info("delete id:{}",id);
         Map<String, Object> result = new HashMap<>();
         userDao.deleteByPrimaryKey(id);
         return result;
@@ -43,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> update(User entity, String sessionId)throws CustomException {
-        logger.info("update entity:{}",entity);
+        log.info("update entity:{}",entity);
         Map<String, Object> result = new HashMap<>();
         userDao.updateByPrimaryKey(entity);
         return result;
@@ -51,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> select(Boolean needRole,Boolean needRoleAndPermission,Integer id, String sessionId)throws CustomException {
-        logger.info("select needRole:{},needRoleAndPermission:{},id:{}",id);
+        log.info("select needRole:{},needRoleAndPermission:{},id:{}",id);
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> condition = new HashMap<>();
         condition.put("id",id);
@@ -69,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> selectAll(Boolean needRole,Boolean needRoleAndPermission,Integer pageNo,Integer pageSize,String sessionId)throws CustomException {
-        logger.info("selectAll needRole:{},needRoleAndPermission:{},pageNo:{},pageSize:{},sessionId",needRole,needRoleAndPermission,pageNo,pageSize,sessionId);
+        log.info("selectAll needRole:{},needRoleAndPermission:{},pageNo:{},pageSize:{},sessionId",needRole,needRoleAndPermission,pageNo,pageSize,sessionId);
         Map<String, Object> result = new HashMap<>();
         PageHelper.startPage(pageNo, pageSize);
         PageInfo<User> pageInfo = null;
