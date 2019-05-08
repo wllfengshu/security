@@ -55,7 +55,6 @@ public class CustomRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
-        upToken.setRememberMe(true);
         Map<String, Object> condition = new HashMap<>();
         condition.put("username",upToken.getUsername());
         List<User> users = userDao.selectUserAndRoleAndPermission(condition);

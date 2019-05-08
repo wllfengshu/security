@@ -1,26 +1,13 @@
 package com.wllfengshu.security.config;
 
-import com.wllfengshu.security.cache.ShiroRedisCacheManager;
-import com.wllfengshu.security.cache.ShiroRedisSessionDao;
-import com.wllfengshu.security.cache.ShiroSessionManager;
 import com.wllfengshu.security.shiro.CustomRealm;
-import com.wllfengshu.security.utils.CollectionSerializer;
-import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.web.mgt.CookieRememberMeManager;
-import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.servlet.SimpleCookie;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.core.RedisTemplate;
 
-import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -33,31 +20,25 @@ import java.util.Map;
 public class ShiroConfig {
 
     /**
-     * 安全管理器
-     *
+     * 注入自定义的realm，告诉shiro如何获取用户信息来做登录或权限控制
      * @return
      */
     @Bean
-    public DefaultWebSecurityManager securityManager(RedisTemplate redisTemplate, RedisCacheManager redisCacheManager) {
-        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(getCustomRealm(redisCacheManager));
-        securityManager.setCacheManager(getShiroRedisCacheManager(redisCacheManager));
-        securityManager.setRememberMeManager(getRememberMeManager());
-        securityManager.setSessionManager(getSessionManager(redisTemplate));
-        return securityManager;
+    public Realm realm() {
+        return new CustomRealm();
     }
 
     /**
-     * 缓存管理器的配置
-     *
-     * @param redisCacheManager
+     * setUsePrefix(false)用于解决一个奇怪的bug。在引入spring aop的情况下。
+     * 在@Controller注解的类的方法中加入@RequiresRole等shiro注解，会导致该方法无法映射请求，导致返回404。
+     * 加入这项配置能解决这个bug
      * @return
      */
     @Bean
-    public ShiroRedisCacheManager getShiroRedisCacheManager(RedisCacheManager redisCacheManager) {
-        ShiroRedisCacheManager cacheManager = new ShiroRedisCacheManager();
-        cacheManager.setCacheManager(redisCacheManager);
-        return cacheManager;
+    public static DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator(){
+        DefaultAdvisorAutoProxyCreator creator = new DefaultAdvisorAutoProxyCreator();
+        creator.setUsePrefix(true);
+        return creator;
     }
 
     /**
@@ -81,93 +62,6 @@ public class ShiroConfig {
         filters.put("/**", "authc");
         factoryBean.setFilterChainDefinitionMap(filters);
         return factoryBean;
-    }
-
-    /**
-     * 注入自定义的realm，告诉shiro如何获取用户信息来做登录或权限控制
-     * @return
-     */
-    @Bean
-    public CustomRealm getCustomRealm(RedisCacheManager redisCacheManager) {
-        CustomRealm realm = new CustomRealm();
-        realm.setCachingEnabled(true);
-        realm.setCacheManager(getShiroRedisCacheManager(redisCacheManager));
-        //认证
-        realm.setAuthenticationCachingEnabled(true);
-        //授权
-        realm.setAuthorizationCachingEnabled(true);
-        realm.setAuthenticationCacheName("fulinauthen");
-        realm.setAuthorizationCacheName("fulinauthor");
-        return realm;
-    }
-
-    /**
-     * 管理shiro bean生命周期
-     * @return
-     */
-    @Bean
-    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-        return new LifecycleBeanPostProcessor();
-    }
-
-    /**
-     * 配置Cookie的生成模版(cookie的name，cookie的有效时间)
-     * @return
-     */
-    @Bean
-    public SimpleCookie getRememberMeCookie() {
-        //这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
-        SimpleCookie cookie = new SimpleCookie("rememberMe");
-        //记住我cookie生效时间30天 ,单位秒
-        cookie.setMaxAge(259200);
-        return cookie;
-    }
-
-    /**
-     * 配置rememberMeManager
-     * @return
-     */
-    @Bean
-    public CookieRememberMeManager getRememberMeManager() {
-        CookieRememberMeManager meManager = new CookieRememberMeManager();
-        meManager.setCookie(getRememberMeCookie());
-        //rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度(128 256 512 位)
-        meManager.setCipherKey(Base64.decode("2AvVhdsgUs0FSA3SDFAdag=="));
-        return meManager;
-    }
-
-    /**
-     * 配置sessionManager，由redis存储数据
-     */
-    @Bean
-    @DependsOn(value = "lifecycleBeanPostProcessor")
-    public DefaultWebSessionManager getSessionManager(RedisTemplate redisTemplate) {
-        ShiroSessionManager sessionManager = new ShiroSessionManager();
-        CollectionSerializer<Serializable> collectionSerializer = CollectionSerializer.getInstance();
-        redisTemplate.setDefaultSerializer(collectionSerializer);
-        //redisTemplate默认采用的其实是valueSerializer
-        redisTemplate.setValueSerializer(collectionSerializer);
-        ShiroRedisSessionDao redisSessionDao = new ShiroRedisSessionDao(redisTemplate);
-        sessionManager.setSessionDAO(redisSessionDao);
-        sessionManager.setDeleteInvalidSessions(true);
-        SimpleCookie cookie = new SimpleCookie();
-        cookie.setName("securityCookie");
-        sessionManager.setSessionIdCookie(cookie);
-        sessionManager.setSessionIdCookieEnabled(true);
-        return sessionManager;
-    }
-
-    /**
-     * setUsePrefix(false)用于解决一个奇怪的bug。在引入spring aop的情况下。
-     * 在@Controller注解的类的方法中加入@RequiresRole等shiro注解，会导致该方法无法映射请求，导致返回404。
-     * 加入这项配置能解决这个bug
-     * @return
-     */
-    @Bean
-    public static DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator(){
-        DefaultAdvisorAutoProxyCreator creator = new DefaultAdvisorAutoProxyCreator();
-        creator.setUsePrefix(true);
-        return creator;
     }
 
 }
