@@ -1,17 +1,52 @@
 # 权限管理
 
-> 包含如下内容：
-> 1、登陆、登出、心跳、查询当前登陆的用户信息
-> 2、用户管理
-> 3、角色管理
-> 4、权限管理
+> 包含如下内容：  
+> 1、登陆、登出、心跳、查询当前登陆的用户信息  
+> 2、用户管理  
+> 3、角色管理  
+> 4、权限管理  
 
 
-- swagger文档地址：
+## swagger文档地址：
   [http://localhost:8080/security/v1/swagger-ui.html](http://localhost:8080/security/v1/swagger-ui.html "http://localhost:8080/security/v1/swagger-ui.html")
 
-- markdown文档地址：
+## markdown文档地址：
   本项目根目录doc路径
+
+## 注意：
+   本项目使用了lombok，使用idea时请务必先安装这个插件！
+
+## 技术选型
+技术 | 名称
+----|------
+Spring Boot | 容器  
+MyBatis | ORM框架
+Druid | 数据库连接池
+Swagger2 | 接口测试框架
+Maven | 项目构建管理
+lombok | POJO简化工具
+logstash | 日志管理
+mapper | 通用mapper
+pagehelper | 分页插件
+shiro | 安全框架
+
+## 示例图
+
+- 项目工程图  
+![工程结构图](./img/project.jpg)
+
+- swagger图  
+![swagger图](./img/swagger.jpg)
+
+- 接口图  
+![接口图](./img/swagger-interface.jpg)
+
+
+
+> 本项目使用jbot生成：github地址：[https://github.com/wllfengshu/jbot](https://github.com/wllfengshu/jbot "jbot")
+
+
+<br/><br/>
 
 - 注意：
 本项目在查询“角色对应的权限”，以及“用户对应的角色”时，存在查询效率的“n+1问题”。也就是说，假设有10个角色，那么

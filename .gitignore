@@ -1,6 +1,4 @@
-HELP.md
 /target/
-!.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
 .apt_generated
@@ -16,6 +14,9 @@ HELP.md
 *.iws
 *.iml
 *.ipr
+mvnw
+mvnw.cmd
+/.mvn/
 
 ### NetBeans ###
 /nbproject/private/
