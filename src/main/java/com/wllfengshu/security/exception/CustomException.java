@@ -25,16 +25,8 @@ public class CustomException extends Exception {
         UnknownAccountException(10003),
         //用户名或密码错误
         IncorrectCredentialsException(10004),
-        //账户被锁定
-        LockedAccountException(10005),
-        //过度尝试异常
-        ExcessiveAttemptsException(10006),
-        //身份验证异常
-        AuthenticationException(10007),
-        //未登陆，无法操作
-        NotLoginError(10008),
-        //已登陆，但sessionId不匹配
-        LoginButMismatchSessionId(10009)
+        //sessionId无效
+        InvalidSessionId(10005)
         ;
 
         private int code;

@@ -27,6 +27,19 @@ spring:
     filters: stat,wall,log4j
     use-global-data-source-stat: true
     connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+  redis:
+    database: 0
+    timeout: 1000ms
+    password: ${redis_password}
+    sentinel:
+      master: ${redis_master}
+      nodes: ${redis_cluster}
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1ms
+        min-idle: 0
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
   type-aliases-package: com.wllfengshu.security.model
@@ -41,7 +54,4 @@ pagehelper:
   reasonable: true
   params: count=countSql
   support-methods-arguments: true
-shiro:
-  web:
-    enabled: true
 

@@ -4,7 +4,6 @@ import com.wllfengshu.security.exception.CustomException;
 import com.wllfengshu.security.model.Role;
 import com.wllfengshu.security.service.RoleService;
 import io.swagger.annotations.*;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +31,12 @@ public class RoleRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/role", method = RequestMethod.POST)
-    @RequiresPermissions("insertRole")
     public Map<String, Object> insert(
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody Role entity)throws CustomException {
-        logger.info("insert entity:{}",entity);
+        logger.info("insert entity:{},sessionId:{}",entity,sessionId);
         return roleService.insert(entity,sessionId);
     }
 
@@ -51,13 +49,12 @@ public class RoleRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/role/{id}", method = RequestMethod.DELETE)
-    @RequiresPermissions("deleteRole")
     public Map<String, Object> delete(
             @PathVariable("id") Integer id,
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("delete id:{}",id);
+        logger.info("delete id:{},sessionId:{}",id,sessionId);
         return roleService.delete(id,sessionId);
     }
 
@@ -67,13 +64,12 @@ public class RoleRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/role", method = RequestMethod.PUT)
-    @RequiresPermissions("updateRole")
     public Map<String, Object> update(
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody Role entity)throws CustomException {
-        logger.info("update entity:{}",entity);
+        logger.info("update entity:{},sessionId:{}",entity,sessionId);
         return roleService.update(entity,sessionId);
     }
 
@@ -87,14 +83,13 @@ public class RoleRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/role/{id}", method = RequestMethod.GET)
-    @RequiresPermissions("selectRole")
     public Map<String, Object> select(
             @RequestParam(value = "needPermission",required = false,defaultValue = "false") Boolean needPermission,
             @PathVariable("id") Integer id,
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("select needPermission:{},id:{}",id);
+        logger.info("select needPermission:{},id:{},sessionId:{}",needPermission,id,sessionId);
         return roleService.select(needPermission,id,sessionId);
     }
 
@@ -109,7 +104,6 @@ public class RoleRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    @RequiresPermissions("selectAllRole")
     public Map<String, Object> selectAll(
             @RequestParam(value = "needPermission",required = false,defaultValue = "false") Boolean needPermission,
             @RequestParam(value = "pageNo",required = false,defaultValue = "0") Integer pageNo,
@@ -117,7 +111,7 @@ public class RoleRest {
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("selectAll needPermission:{},pageNo:{},pageSize:{},sessionId",needPermission,pageNo,pageSize,sessionId);
+        logger.info("selectAll needPermission:{},pageNo:{},pageSize:{},sessionId:{}",needPermission,pageNo,pageSize,sessionId);
         return roleService.selectAll(needPermission,pageNo,pageSize,sessionId);
     }
 }

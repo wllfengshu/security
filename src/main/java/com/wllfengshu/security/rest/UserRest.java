@@ -4,7 +4,6 @@ import com.wllfengshu.security.exception.CustomException;
 import com.wllfengshu.security.model.User;
 import com.wllfengshu.security.service.UserService;
 import io.swagger.annotations.*;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +31,12 @@ public class UserRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/user", method = RequestMethod.POST)
-    @RequiresPermissions("insertUser")
     public Map<String, Object> insert(
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody User entity)throws CustomException {
-        logger.info("insert entity:{}",entity);
+        logger.info("insert entity:{},sessionId:{}",entity,sessionId);
         return userService.insert(entity,sessionId);
     }
 
@@ -51,13 +49,12 @@ public class UserRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
-    @RequiresPermissions("deleteUser")
     public Map<String, Object> delete(
             @PathVariable("id") Integer id,
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("delete id:{}",id);
+        logger.info("delete id:{},sessionId:{}",id,sessionId);
         return userService.delete(id,sessionId);
     }
 
@@ -67,13 +64,12 @@ public class UserRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/user", method = RequestMethod.PUT)
-    @RequiresPermissions("updateUser")
     public Map<String, Object> update(
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody User entity)throws CustomException {
-        logger.info("update entity:{}",entity);
+        logger.info("update entity:{},sessionId:{}",entity,sessionId);
         return userService.update(entity,sessionId);
     }
 
@@ -88,7 +84,6 @@ public class UserRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-    @RequiresPermissions("selectUser")
     public Map<String, Object> select(
             @RequestParam(value = "needRole",required = false,defaultValue = "false") Boolean needRole,
             @RequestParam(value = "needRoleAndPermission",required = false,defaultValue = "false") Boolean needRoleAndPermission,
@@ -96,7 +91,7 @@ public class UserRest {
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("select needRole:{},needRoleAndPermission:{},id:{}",id);
+        logger.info("select needRole:{},needRoleAndPermission:{},id:{},sessionId:{}",needRole,needRoleAndPermission,id,sessionId);
         return userService.select(needRole,needRoleAndPermission,id,sessionId);
     }
 
@@ -112,7 +107,6 @@ public class UserRest {
             @ApiResponse(code = 400, message = "IllegalParam")
     })
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    @RequiresPermissions("selectAllUser")
     public Map<String, Object> selectAll(
             @RequestParam(value = "needRole",required = false,defaultValue = "false") Boolean needRole,
             @RequestParam(value = "needRoleAndPermission",required = false,defaultValue = "false") Boolean needRoleAndPermission,

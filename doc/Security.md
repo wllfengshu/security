@@ -149,7 +149,7 @@ Content-Type: application/json;charset=utf-8
 
 | 参数名 | 类型 | 是否允许空 | 描述 | 备注 |
 | ---- | ---- | ---- | ---- | ---- |
-| touch | string | NO | 心跳状态 |  |
+| touch | bool | NO | 心跳状态 |  |
 
 #### 3.3 请求响应示例
 
@@ -174,7 +174,7 @@ Content-Type: application/json;charset=utf-8
 
 ```json
 {
-  "touch": "success"
+  "touch": true
 }
 ```
 

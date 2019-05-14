@@ -6,6 +6,7 @@
 > 3、角色管理  
 > 4、权限管理  
 
+注意：不再使用shiro
 
 ## swagger文档地址：
   [http://localhost:8080/security/v1/swagger-ui.html](http://localhost:8080/security/v1/swagger-ui.html "http://localhost:8080/security/v1/swagger-ui.html")
