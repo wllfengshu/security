@@ -6,7 +6,7 @@ import com.wllfengshu.security.dao.UserDao;
 import com.wllfengshu.security.exception.CustomException;
 import com.wllfengshu.security.model.User;
 import com.wllfengshu.security.service.UserService;
-import com.wllfengshu.security.utils.AuthUtil;
+import com.wllfengshu.security.component.AuthComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,14 +23,14 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    AuthUtil authUtil;
+    AuthComponent authComponent;
     @Autowired
     private UserDao userDao;
 
     @Override
     public Map<String, Object> insert(User entity, String sessionId)throws CustomException {
         log.info("insert entity:{}",entity);
-        authUtil.requiresPermission(sessionId,"insertUser");
+        authComponent.requiresPermission(sessionId,"insertUser");
         Map<String, Object> result = new HashMap<>();
         userDao.insert(entity);
         return result;
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> delete(Integer id, String sessionId)throws CustomException {
         log.info("delete id:{}",id);
-        authUtil.requiresPermission(sessionId,"deleteUser");
+        authComponent.requiresPermission(sessionId,"deleteUser");
         Map<String, Object> result = new HashMap<>();
         userDao.deleteByPrimaryKey(id);
         return result;
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> update(User entity, String sessionId)throws CustomException {
         log.info("update entity:{}",entity);
-        authUtil.requiresPermission(sessionId,"updateUser");
+        authComponent.requiresPermission(sessionId,"updateUser");
         Map<String, Object> result = new HashMap<>();
         userDao.updateByPrimaryKey(entity);
         return result;
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> select(Boolean needRole,Boolean needRoleAndPermission,Integer id, String sessionId)throws CustomException {
         log.info("select needRole:{},needRoleAndPermission:{},id:{}",needRole,needRoleAndPermission,id);
-        authUtil.requiresPermission(sessionId,"selectUser");
+        authComponent.requiresPermission(sessionId,"selectUser");
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> condition = new HashMap<>();
         condition.put("id",id);
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> selectAll(Boolean needRole,Boolean needRoleAndPermission,Integer pageNo,Integer pageSize, String sessionId)throws CustomException {
         log.info("selectAll needRole:{},needRoleAndPermission:{},pageNo:{},pageSize:{}",needRole,needRoleAndPermission,pageNo,pageSize);
-        authUtil.requiresPermission(sessionId,"selectAllUser");
+        authComponent.requiresPermission(sessionId,"selectAllUser");
         Map<String, Object> result = new HashMap<>();
         PageHelper.startPage(pageNo, pageSize);
         PageInfo<User> pageInfo = null;

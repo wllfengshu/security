@@ -1,27 +1,26 @@
 package com.wllfengshu.security.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
+ * 权限实体类
  * @author wllfengshu
  */
-@Table(name = "t_permission")
-@ApiModel(value = "权限实体类")
 @Data
+@Entity
+@Table(name = "t_permission")
 public class Permission implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "id")
-    @ApiModelProperty(name = "id", notes = "ID")
+    @Column(name = "id", columnDefinition = "ID")
     private Integer id;
 
     /**
@@ -30,12 +29,10 @@ public class Permission implements Serializable {
      * 如果前端检查到该用户没有insertUser的权限，则不用展示插入用户的页面；
      * 如果其没有insertUser的权限，则无法进行插入用户的操作（不管是页面还是通过接口的方式都无法操作）。
      */
-    @Column(name = "`name`")
-    @ApiModelProperty(name = "name", notes = "权限名")
+    @Column(name = "`name`", columnDefinition = "权限名")
     private String name;
 
-    @Column(name = "description")
-    @ApiModelProperty(name = "description", notes = "描述")
+    @Column(name = "description", columnDefinition = "权限描述")
     private String description;
 
     /**
@@ -45,8 +42,7 @@ public class Permission implements Serializable {
      * 3）dept：查询其他部门数据（这里可以是一个json数组，用来存放其他部门的id）
      * 4）person：查询个人的数据
      */
-    @Column(name = "scope")
-    @ApiModelProperty(name = "scope", notes = "范围")
+    @Column(name = "scope", columnDefinition = "权限范围")
     private String scope;
 
 }

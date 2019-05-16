@@ -1,7 +1,7 @@
 package com.wllfengshu.security.rest;
 
 import com.wllfengshu.security.exception.CustomException;
-import com.wllfengshu.security.model.vo.LoginVo;
+import com.wllfengshu.security.model.vo.LoginVO;
 import com.wllfengshu.security.service.SecurityService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -28,11 +28,11 @@ public class SecurityRest {
     @ApiOperation(value = "登陆", httpMethod = "POST")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String, Object> login(
-            @ApiParam(value = "用户名和密码",required = true) @RequestBody LoginVo loginVo,
+            @ApiParam(value = "用户名和密码",required = true) @RequestBody LoginVO loginVo,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
         logger.info("login loginVo:{}",loginVo);
-        return securityService.login(loginVo);
+        return securityService.login(loginVo,request);
     }
 
     @ApiOperation(value = "登出", httpMethod = "GET")

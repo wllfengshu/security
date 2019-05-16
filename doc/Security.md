@@ -86,7 +86,7 @@ Content-Type: application/json;charset=utf-8
 
 | 参数名 | 类型 | 是否允许空 | 描述 | 备注 |
 | ---- | ---- | ---- | ---- | ---- |
-| logout | string | NO | 登出状态 |  |
+| logout | bool | NO | 登出状态 |  |
 
 #### 2.3 请求响应示例
 
@@ -111,7 +111,7 @@ Content-Type: application/json;charset=utf-8
 
 ```json
 {
-  "logout": "success"
+  "logout": true
 }
 ```
 

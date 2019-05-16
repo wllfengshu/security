@@ -1,8 +1,9 @@
 package com.wllfengshu.security.service;
 
 import com.wllfengshu.security.exception.CustomException;
-import com.wllfengshu.security.model.vo.LoginVo;
+import com.wllfengshu.security.model.vo.LoginVO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -13,10 +14,11 @@ public interface SecurityService {
     /**
      * 登陆
      * @param loginVo
+     * @param request
      * @return
      * @throws CustomException
      */
-    Map<String, Object> login(LoginVo loginVo) throws CustomException;
+    Map<String, Object> login(LoginVO loginVo, HttpServletRequest request) throws CustomException;
 
     /**
      * 登出

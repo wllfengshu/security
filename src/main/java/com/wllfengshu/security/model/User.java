@@ -1,37 +1,30 @@
 package com.wllfengshu.security.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 用户实体类
  * @author wllfengshu
  */
-@Table(name = "t_user")
-@ApiModel(value = "用户实体类")
 @Data
+@Entity
+@Table(name = "t_user")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "id")
-    @ApiModelProperty(name = "id", notes = "ID")
+    @Column(name = "id", columnDefinition = "ID")
     private Integer id;
 
-    @Column(name = "username")
-    @ApiModelProperty(name = "username", notes = "用户名")
+    @Column(name = "username", columnDefinition = "用户名")
     private String username;
 
-    @Column(name = "password")
-    @ApiModelProperty(name = "password", notes = "密码")
+    @Column(name = "password", columnDefinition = "密码")
     private String password;
 
     /**

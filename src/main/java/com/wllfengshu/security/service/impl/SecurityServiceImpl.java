@@ -3,18 +3,18 @@ package com.wllfengshu.security.service.impl;
 import com.wllfengshu.security.dao.UserDao;
 import com.wllfengshu.security.exception.CustomException;
 import com.wllfengshu.security.model.User;
-import com.wllfengshu.security.model.vo.LoginVo;
+import com.wllfengshu.security.model.vo.LoginVO;
 import com.wllfengshu.security.service.SecurityService;
-import com.wllfengshu.security.utils.AuthUtil;
+import com.wllfengshu.security.component.AuthComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author wllfengshu
@@ -24,12 +24,12 @@ import java.util.UUID;
 public class SecurityServiceImpl implements SecurityService {
 
     @Autowired
-    AuthUtil authUtil;
+    AuthComponent authComponent;
     @Autowired
     private UserDao userDao;
 
     @Override
-    public Map<String, Object> login(LoginVo loginVo) throws CustomException {
+    public Map<String, Object> login(LoginVO loginVo, HttpServletRequest request) throws CustomException {
         log.info("login loginVo:{}",loginVo);
         Map<String, Object> result = new HashMap<>();
         if (StringUtils.isEmpty(loginVo.getUsername())){
@@ -51,9 +51,8 @@ public class SecurityServiceImpl implements SecurityService {
             log.error("用户名或密码错误");
             throw new CustomException("用户名或密码错误", CustomException.ExceptionName.IncorrectCredentialsException);
         }
-        String sessionId = UUID.randomUUID().toString();
-        authUtil.put(sessionId,users.get(0));
-        result.put("sessionId",sessionId);
+        authComponent.put(request.getSession().getId(),authComponent.user2UserVo(users.get(0)));
+        result.put("sessionId",request.getSession().getId());
         return result;
     }
 
@@ -61,8 +60,7 @@ public class SecurityServiceImpl implements SecurityService {
     public Map<String, Object> logout(String sessionId) throws CustomException {
         log.info("logout sessionId:{}",sessionId);
         Map<String, Object> result = new HashMap<>();
-        authUtil.delete(sessionId);
-        result.put("logout","success");
+        result.put("logout",authComponent.delete(sessionId));
         return result;
     }
 
@@ -70,7 +68,7 @@ public class SecurityServiceImpl implements SecurityService {
     public Map<String, Object> touch(String sessionId) throws CustomException {
         log.info("touch sessionId:{}",sessionId);
         Map<String, Object> result = new HashMap<>();
-        result.put("touch",authUtil.hasKey(sessionId));
+        result.put("touch",authComponent.expire(sessionId));
         return result;
     }
 
@@ -78,7 +76,7 @@ public class SecurityServiceImpl implements SecurityService {
     public Map<String, Object> getCurrentBySession(String sessionId) throws CustomException {
         log.info("getCurrentBySession sessionId:{}",sessionId);
         Map<String, Object> result = new HashMap<>();
-        result.put("data",authUtil.get(sessionId));
+        result.put("data",authComponent.get(sessionId));
         return result;
     }
 }

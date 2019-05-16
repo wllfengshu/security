@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 @ApiModel(value = "登陆时的参数")
 @Data
-public class LoginVo implements Serializable {
+public class LoginVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
