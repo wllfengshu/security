@@ -16,7 +16,7 @@
 
 ### 1 增加
 
-`POST security/permissions/permission`
+`POST security/v1/permissions/permission`
 
 #### 1.1 请求参数
 
@@ -33,7 +33,7 @@
 #### 1.3 请求响应示例
 
 ```
-POST http://127.0.0.1:8080/security/permissions/permission
+POST http://127.0.0.1:8080/security/v1/permissions/permission
 ```
 
 - (1) 请求头：request headers
@@ -81,7 +81,7 @@ Content-Type: application/json;charset=utf-8
 
 ### 2 删除
 
-`DELETE security/permissions/permission/{id}`
+`DELETE security/v1/permissions/permission/{id}`
 
 #### 2.1 请求参数
 
@@ -98,7 +98,7 @@ Content-Type: application/json;charset=utf-8
 #### 2.3 请求响应示例
 
 ```
-DELETE http://127.0.0.1:8080/security/permissions/permission/1
+DELETE http://127.0.0.1:8080/security/v1/permissions/permission/1
 ```
 
 - (1) 请求头：request headers
@@ -141,7 +141,7 @@ Content-Type: application/json;charset=utf-8
 
 ### 3 修改
 
-`PUT security/permissions/permission`
+`PUT security/v1/permissions/permission`
 
 #### 3.1 请求参数
 
@@ -158,7 +158,7 @@ Content-Type: application/json;charset=utf-8
 #### 3.3 请求响应示例
 
 ```
-PUT http://127.0.0.1:8080/security/permissions/permission
+PUT http://127.0.0.1:8080/security/v1/permissions/permission
 ```
 
 - (1) 请求头：request headers
@@ -206,7 +206,7 @@ Content-Type: application/json;charset=utf-8
 
 ### 4 通过ID查询
 
-`GET security/permissions/permission/{id}`
+`GET security/v1/permissions/permission/{id}`
 
 #### 4.1 请求参数
 
@@ -227,7 +227,7 @@ Content-Type: application/json;charset=utf-8
 #### 4.3 请求响应示例
 
 ```
-GET http://127.0.0.1:8080/security/permissions/permission/1
+GET http://127.0.0.1:8080/security/v1/permissions/permission/1
 ```
 
 - (1) 请求头：request headers
@@ -275,7 +275,7 @@ Content-Type: application/json;charset=utf-8
 
 ### 5 查询
 
-`GET security/permissions`
+`GET security/v1/permissions`
 
 #### 5.1 请求参数
 
@@ -297,7 +297,7 @@ Content-Type: application/json;charset=utf-8
 #### 5.3 请求响应示例
 
 ```
-GET http://127.0.0.1:8080/security/permissions
+GET http://127.0.0.1:8080/security/v1/permissions
 ```
 
 - (1) 请求头：request headers

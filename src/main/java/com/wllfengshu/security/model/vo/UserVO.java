@@ -37,7 +37,7 @@ public class UserVO implements Serializable {
 
     /**
      * 形如：
-     * {{"insertPermission":null},{"selectUser":"all"}}
+     * {"insertPermission":null,"selectUser":"all"}
      * 注意：这里的key是权限名，这里的value是scope的值
      */
     @ApiModelProperty(name = "permissions", notes = "权限的集合", required = true)

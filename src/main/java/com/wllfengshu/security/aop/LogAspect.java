@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,9 +17,31 @@ import org.springframework.stereotype.Component;
 public class LogAspect {
 
     /**
-     * 当sql执行时间超过该值时，进行warn级别的打印
+     * 当sql执行时间超过该值时，进行warn级别的打印(单位ms)
      */
-    private static final long WARN_WHEN_OVER_TIME = 5 * 1000L;
+    private static final long SQL_WARN_WHEN_OVER_TIME = 5 * 1000;
+
+    /**
+     * 当web请求响应时间超过该值时，进行warn级别的打印(单位ms)
+     */
+    private static final long WEB_WARN_WHEN_OVER_TIME = 60 * 1000;
+
+    /**
+     * 当从redis中获取数据超过该值时，进行warn级别的打印(单位ms)
+     */
+    private static final long REDIS_WARN_WHEN_OVER_TIME = 100;
+
+    private Object process(ProceedingJoinPoint joinPoint,String target,long warnTime) throws Throwable {
+        long startTime = System.currentTimeMillis();
+        Object result = joinPoint.proceed();
+        long costTime = System.currentTimeMillis() - startTime;
+        if (costTime > warnTime) {
+            log.warn("execute "+target+":{} costTime:{} ms", joinPoint.getSignature().getName(), costTime);
+        } else {
+            log.info("execute "+target+":{} costTime:{} ms", joinPoint.getSignature().getName(), costTime);
+        }
+        return result;
+    }
 
     /**
      * 打印sql执行的时间
@@ -31,16 +51,8 @@ public class LogAspect {
      * @throws Throwable
      */
     @Around("execution( * com.wllfengshu.security.dao.*.*(..))")
-    public Object logSqlExecution(ProceedingJoinPoint joinPoint) throws Throwable {
-        long startTime = System.currentTimeMillis();
-        Object result = joinPoint.proceed();
-        long costTime = System.currentTimeMillis() - startTime;
-        if (costTime > WARN_WHEN_OVER_TIME) {
-            log.warn("execute sql : {} costTime: [{}] ms", joinPoint.getSignature().getName(), costTime);
-        } else {
-            log.info("execute sql : {} costTime: [{}] ms", joinPoint.getSignature().getName(), costTime);
-        }
-        return result;
+    public Object sqlLogExecution(ProceedingJoinPoint joinPoint) throws Throwable {
+        return process(joinPoint,"sql",SQL_WARN_WHEN_OVER_TIME);
     }
 
     /**
@@ -51,12 +63,19 @@ public class LogAspect {
      * @throws Throwable
      */
     @Around("execution( * com.wllfengshu.security.rest.*.*(..))")
-    public Object webLog(ProceedingJoinPoint joinPoint) throws Throwable {
-        long startTime = System.currentTimeMillis();
-        Object result = joinPoint.proceed();
-        long costTime = System.currentTimeMillis() - startTime;
-        log.info("request: {} cost: {}", joinPoint.getSignature().getName(), costTime);
-        return result;
+    public Object webLogExecution(ProceedingJoinPoint joinPoint) throws Throwable {
+        return process(joinPoint,"request",WEB_WARN_WHEN_OVER_TIME);
     }
 
+    /**
+     * 打印redis执行的时间
+     *
+     * @param joinPoint
+     * @return
+     * @throws Throwable
+     */
+    @Around("execution( * com.wllfengshu.security.component.*.*(..))")
+    public Object redisLogExecution(ProceedingJoinPoint joinPoint) throws Throwable {
+        return process(joinPoint,"redis",REDIS_WARN_WHEN_OVER_TIME);
+    }
 }

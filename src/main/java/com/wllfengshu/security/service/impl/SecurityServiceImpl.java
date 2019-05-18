@@ -60,7 +60,10 @@ public class SecurityServiceImpl implements SecurityService {
     public Map<String, Object> logout(String sessionId) throws CustomException {
         log.info("logout sessionId:{}",sessionId);
         Map<String, Object> result = new HashMap<>();
-        result.put("logout",authComponent.delete(sessionId));
+        if (!authComponent.delete(sessionId)){
+            throw new CustomException("sessionId无效", CustomException.ExceptionName.InvalidSessionId);
+        }
+        result.put("logout","success");
         return result;
     }
 
@@ -68,7 +71,10 @@ public class SecurityServiceImpl implements SecurityService {
     public Map<String, Object> touch(String sessionId) throws CustomException {
         log.info("touch sessionId:{}",sessionId);
         Map<String, Object> result = new HashMap<>();
-        result.put("touch",authComponent.expire(sessionId));
+        if (!authComponent.expire(sessionId)){
+            throw new CustomException("sessionId无效", CustomException.ExceptionName.InvalidSessionId);
+        }
+        result.put("touch","success");
         return result;
     }
 
@@ -76,7 +82,11 @@ public class SecurityServiceImpl implements SecurityService {
     public Map<String, Object> getCurrentBySession(String sessionId) throws CustomException {
         log.info("getCurrentBySession sessionId:{}",sessionId);
         Map<String, Object> result = new HashMap<>();
-        result.put("data",authComponent.get(sessionId));
+        Object o = authComponent.get(sessionId);
+        if (null == o){
+            throw new CustomException("sessionId无效", CustomException.ExceptionName.InvalidSessionId);
+        }
+        result.put("data",o);
         return result;
     }
 }

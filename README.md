@@ -29,7 +29,6 @@ lombok | POJO简化工具
 logstash | 日志管理
 mapper | 通用mapper
 pagehelper | 分页插件
-shiro | 安全框架
 
 ## 示例图
 

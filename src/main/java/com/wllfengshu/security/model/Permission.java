@@ -36,11 +36,10 @@ public class Permission implements Serializable {
     private String description;
 
     /**
-     * 用来做数据权限，这里存在四种值：all全部；org本部门及其下属部门；dept其他部门；person个人
-     * 1）all：查询全部（如果有多租户的概念，这里可以表示查整个租户）
-     * 2）org：查询本部门及其下属部门
-     * 3）dept：查询其他部门数据（这里可以是一个json数组，用来存放其他部门的id）
-     * 4）person：查询个人的数据
+     * 用来做数据权限
+     * TODO 这里暂只考虑2种值：all全部；person个人
+     * 1）all：查询全部
+     * 2）person：查询个人的数据
      */
     @Column(name = "scope", columnDefinition = "权限范围")
     private String scope;

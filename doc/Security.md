@@ -3,7 +3,7 @@
 
 ### 1 登陆
 
-`POST security/login`
+`POST security/v1/login`
 
 #### 1.1 请求参数
 
@@ -21,7 +21,7 @@
 #### 1.3 请求响应示例
 
 ```
-POST http://127.0.0.1:8080/login
+POST http://127.0.0.1:8080/security/v1/login
 ```
 
 - (1) 请求头：request headers
@@ -74,7 +74,7 @@ Content-Type: application/json;charset=utf-8
 
 ### 2 登出
 
-`GET security/logout`
+`GET security/v1/logout`
 
 #### 2.1 请求参数
 
@@ -86,12 +86,12 @@ Content-Type: application/json;charset=utf-8
 
 | 参数名 | 类型 | 是否允许空 | 描述 | 备注 |
 | ---- | ---- | ---- | ---- | ---- |
-| logout | bool | NO | 登出状态 |  |
+| logout | string | 否 | 登出状态 | "success" |
 
 #### 2.3 请求响应示例
 
 ```
-GET http://127.0.0.1:8080/security/logout
+GET http://127.0.0.1:8080/security/v1/logout
 ```
 
 - (1) 请求头：request headers
@@ -111,7 +111,7 @@ Content-Type: application/json;charset=utf-8
 
 ```json
 {
-  "logout": true
+  "logout": "success"
 }
 ```
 
@@ -137,7 +137,7 @@ Content-Type: application/json;charset=utf-8
 
 ### 3 心跳
 
-`GET security/touch`
+`GET security/v1/touch`
 
 #### 3.1 请求参数
 
@@ -149,12 +149,12 @@ Content-Type: application/json;charset=utf-8
 
 | 参数名 | 类型 | 是否允许空 | 描述 | 备注 |
 | ---- | ---- | ---- | ---- | ---- |
-| touch | bool | NO | 心跳状态 |  |
+| touch | string | NO | 心跳状态 | "success" |
 
 #### 3.3 请求响应示例
 
 ```
-GET http://127.0.0.1:8080/security/touch
+GET http://127.0.0.1:8080/security/v1/touch
 ```
 
 - (1) 请求头：request headers
@@ -174,7 +174,7 @@ Content-Type: application/json;charset=utf-8
 
 ```json
 {
-  "touch": true
+  "touch": "success"
 }
 ```
 
@@ -200,7 +200,7 @@ Content-Type: application/json;charset=utf-8
 
 ### 4 获取当前登陆的用户信息
 
-`GET security/session`
+`GET security/v1/session`
 
 #### 4.1 请求参数
 
@@ -219,7 +219,7 @@ Content-Type: application/json;charset=utf-8
 #### 4.3 请求响应示例
 
 ```
-GET http://127.0.0.1:8080/security/session
+GET http://127.0.0.1:8080/security/v1/session
 ```
 
 - (1) 请求头：request headers
@@ -241,34 +241,26 @@ Content-Type: application/json;charset=utf-8
   "data": {
     "id": 1,
     "username": "admin",
-    "password": "Aa123456",
     "roles": [
-      {
-        "id": 1,
-        "name": "admin",
-        "description": "管理员",
-        "permissions": [
-          {
-            "id": 1,
-            "name": "insertPermission",
-            "description": "插入权限",
-            "scope": null
-          },
-          {
-            "id": 2,
-            "name": "deletePermission",
-            "description": "删除权限",
-            "scope": null
-          },
-          {
-            "id": 3,
-            "name": "updatePermission",
-            "description": "修改权限",
-            "scope": null
-          }
-        ]
-      }
-    ]
+      "admin"
+    ],
+    "permissions": {
+      "updateRole": null,
+      "selectAllRole": null,
+      "deletePermission": null,
+      "selectAllPermission": null,
+      "updateUser": null,
+      "insertPermission": null,
+      "insetUser": null,
+      "selectUser": null,
+      "deleteRole": null,
+      "selectPermission": null,
+      "insetRole": null,
+      "selectAllUser": null,
+      "deleteUser": null,
+      "selectRole": null,
+      "updatePermission": null
+    }
   }
 }
 ```

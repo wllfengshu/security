@@ -34,7 +34,7 @@ public class Swagger2Config {
         return new ApiInfoBuilder()
                 .title("security RESTful APIs")
                 .description("")
-                .contact(new Contact("wllfengshu", "https://github.com/wllfengshu/jbot", "wllfengshu@163.com"))
+                .contact(new Contact("wllfengshu", "https://github.com/wllfengshu/security/tree/1.0.0", "wllfengshu@163.com"))
                 .version("1.0")
                 .build();
     }

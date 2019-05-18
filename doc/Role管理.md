@@ -15,7 +15,7 @@
 
 ### 1 增加
 
-`POST security/roles/role`
+`POST security/v1/roles/role`
 
 #### 1.1 请求参数
 
@@ -32,7 +32,7 @@
 #### 1.3 请求响应示例
 
 ```
-POST http://127.0.0.1:8080/security/roles/role
+POST http://127.0.0.1:8080/security/v1/roles/role
 ```
 
 - (1) 请求头：request headers
@@ -79,7 +79,7 @@ Content-Type: application/json;charset=utf-8
 
 ### 2 删除
 
-`DELETE security/roles/role/{id}`
+`DELETE security/v1/roles/role/{id}`
 
 #### 2.1 请求参数
 
@@ -96,7 +96,7 @@ Content-Type: application/json;charset=utf-8
 #### 2.3 请求响应示例
 
 ```
-DELETE http://127.0.0.1:8080/security/roles/role/1
+DELETE http://127.0.0.1:8080/security/v1/roles/role/1
 ```
 
 - (1) 请求头：request headers
@@ -139,7 +139,7 @@ Content-Type: application/json;charset=utf-8
 
 ### 3 修改
 
-`PUT security/roles/role`
+`PUT security/v1/roles/role`
 
 #### 3.1 请求参数
 
@@ -155,7 +155,7 @@ Content-Type: application/json;charset=utf-8
 #### 3.3 请求响应示例
 
 ```
-PUT http://127.0.0.1:8080/security/roles/role
+PUT http://127.0.0.1:8080/security/v1/roles/role
 ```
 
 - (1) 请求头：request headers
@@ -202,7 +202,7 @@ Content-Type: application/json;charset=utf-8
 
 ### 4 通过ID查询
 
-`GET security/roles/role/{id}`
+`GET security/v1/roles/role/{id}`
 
 #### 4.1 请求参数
 
@@ -223,7 +223,7 @@ Content-Type: application/json;charset=utf-8
 #### 4.3 请求响应示例
 
 ```
-GET http://127.0.0.1:8080/security/roles/role/1
+GET http://127.0.0.1:8080/security/v1/roles/role/1
 ```
 
 - (1) 请求头：request headers
@@ -306,7 +306,7 @@ Content-Type: application/json;charset=utf-8
 
 ### 5 查询
 
-`GET security/roles`
+`GET security/v1/roles`
 
 #### 5.1 请求参数
 
@@ -328,7 +328,7 @@ Content-Type: application/json;charset=utf-8
 #### 5.3 请求响应示例
 
 ```
-GET http://127.0.0.1:8080/security/roles
+GET http://127.0.0.1:8080/security/v1/roles
 ```
 
 - (1) 请求头：request headers

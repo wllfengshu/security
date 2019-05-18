@@ -15,11 +15,12 @@
         <result property="id" column="p_id"></result>
         <result property="name" column="p_name"></result>
         <result property="description" column="p_description"></result>
+        <result property="scope" column="p_scope"></result>
     </resultMap>
 
     <select id="selectPermission" resultMap="com.wllfengshu.security.dao.RoleDao.resultPermission" parameterType="java.lang.Integer">
         SELECT
-            p.id p_id,p.`name` p_name,p.description p_description
+            p.id p_id,p.`name` p_name,p.description p_description,p.scope p_scope
         FROM t_role_permission rp
         LEFT JOIN t_permission p ON rp.permission_id = p.id
         WHERE rp.role_id = #{r_id}
