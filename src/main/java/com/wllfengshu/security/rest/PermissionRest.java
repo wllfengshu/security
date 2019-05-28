@@ -4,8 +4,7 @@ import com.wllfengshu.security.exception.CustomException;
 import com.wllfengshu.security.model.Permission;
 import com.wllfengshu.security.service.PermissionService;
 import io.swagger.annotations.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +15,7 @@ import java.util.Map;
 /**
  * @author wllfengshu
  */
+@Slf4j
 @Api(tags = "权限管理")
 @RestController
 @RequestMapping("/permissions")
@@ -23,7 +23,6 @@ public class PermissionRest {
 
     @Autowired
     private PermissionService permissionService;
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @ApiOperation(value = "插入", httpMethod = "POST")
     @ApiImplicitParam(name = "sessionId", value = "SessionId", required = true, dataType = "string", paramType = "header")
@@ -36,7 +35,7 @@ public class PermissionRest {
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody Permission entity)throws CustomException {
-        logger.info("insert entity:{},sessionId:{}",entity,sessionId);
+        log.info("insert entity:{},sessionId:{}",entity,sessionId);
         return permissionService.insert(entity,sessionId);
     }
 
@@ -54,7 +53,7 @@ public class PermissionRest {
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("delete id:{},sessionId:{}",id,sessionId);
+        log.info("delete id:{},sessionId:{}",id,sessionId);
         return permissionService.delete(id,sessionId);
     }
 
@@ -69,7 +68,7 @@ public class PermissionRest {
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody Permission entity)throws CustomException {
-        logger.info("update entity:{},sessionId:{}",entity,sessionId);
+        log.info("update entity:{},sessionId:{}",entity,sessionId);
         return permissionService.update(entity,sessionId);
     }
 
@@ -87,7 +86,7 @@ public class PermissionRest {
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("select id:{},sessionId:{}",id,sessionId);
+        log.info("select id:{},sessionId:{}",id,sessionId);
         return permissionService.select(id,sessionId);
     }
 
@@ -107,7 +106,7 @@ public class PermissionRest {
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("selectAll pageNo:{},pageSize:{},sessionId:{}",pageNo,pageSize,sessionId);
+        log.info("selectAll pageNo:{},pageSize:{},sessionId:{}",pageNo,pageSize,sessionId);
         return permissionService.selectAll(pageNo,pageSize,sessionId);
     }
 }

@@ -4,8 +4,7 @@ import com.wllfengshu.security.exception.CustomException;
 import com.wllfengshu.security.model.vo.LoginVO;
 import com.wllfengshu.security.service.SecurityService;
 import io.swagger.annotations.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +15,7 @@ import java.util.Map;
 /**
  * @author wllfengshu
  */
+@Slf4j
 @Api(tags = "安全控制")
 @RestController
 @RequestMapping("/")
@@ -23,7 +23,6 @@ public class SecurityRest {
 
     @Autowired
     private SecurityService securityService;
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ApiOperation(value = "登陆", httpMethod = "POST")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -31,7 +30,7 @@ public class SecurityRest {
             @ApiParam(value = "用户名和密码",required = true) @RequestBody LoginVO loginVo,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("login loginVo:{}",loginVo);
+        log.info("login loginVo:{}",loginVo);
         return securityService.login(loginVo,request);
     }
 
@@ -41,7 +40,7 @@ public class SecurityRest {
             @ApiParam(value = "SessionId" ,required = true) @RequestHeader("sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException{
-        logger.info("logout sessionId:{}",sessionId);
+        log.info("logout sessionId:{}",sessionId);
         return securityService.logout(sessionId);
     }
 
@@ -51,7 +50,7 @@ public class SecurityRest {
             @ApiParam(value = "SessionId" ,required = true) @RequestHeader("sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException{
-        logger.info("touch sessionId:{}",sessionId);
+        log.info("touch sessionId:{}",sessionId);
         return securityService.touch(sessionId);
     }
 
@@ -61,7 +60,7 @@ public class SecurityRest {
             @ApiParam(value = "SessionId" ,required = true) @RequestHeader("sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException{
-        logger.info("getCurrentBySession sessionId:{}",sessionId);
+        log.info("getCurrentBySession sessionId:{}",sessionId);
         return securityService.getCurrentBySession(sessionId);
     }
 }

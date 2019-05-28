@@ -4,8 +4,7 @@ import com.wllfengshu.security.exception.CustomException;
 import com.wllfengshu.security.model.Role;
 import com.wllfengshu.security.service.RoleService;
 import io.swagger.annotations.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +15,7 @@ import java.util.Map;
 /**
  * @author wllfengshu
  */
+@Slf4j
 @Api(tags = "角色管理")
 @RestController
 @RequestMapping("/roles")
@@ -23,7 +23,6 @@ public class RoleRest {
 
     @Autowired
     private RoleService roleService;
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @ApiOperation(value = "插入", httpMethod = "POST")
     @ApiImplicitParam(name = "sessionId", value = "SessionId", required = true, dataType = "string", paramType = "header")
@@ -36,7 +35,7 @@ public class RoleRest {
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody Role entity)throws CustomException {
-        logger.info("insert entity:{},sessionId:{}",entity,sessionId);
+        log.info("insert entity:{},sessionId:{}",entity,sessionId);
         return roleService.insert(entity,sessionId);
     }
 
@@ -54,7 +53,7 @@ public class RoleRest {
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("delete id:{},sessionId:{}",id,sessionId);
+        log.info("delete id:{},sessionId:{}",id,sessionId);
         return roleService.delete(id,sessionId);
     }
 
@@ -69,7 +68,7 @@ public class RoleRest {
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody Role entity)throws CustomException {
-        logger.info("update entity:{},sessionId:{}",entity,sessionId);
+        log.info("update entity:{},sessionId:{}",entity,sessionId);
         return roleService.update(entity,sessionId);
     }
 
@@ -89,7 +88,7 @@ public class RoleRest {
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("select needPermission:{},id:{},sessionId:{}",needPermission,id,sessionId);
+        log.info("select needPermission:{},id:{},sessionId:{}",needPermission,id,sessionId);
         return roleService.select(needPermission,id,sessionId);
     }
 
@@ -111,7 +110,7 @@ public class RoleRest {
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("selectAll needPermission:{},pageNo:{},pageSize:{},sessionId:{}",needPermission,pageNo,pageSize,sessionId);
+        log.info("selectAll needPermission:{},pageNo:{},pageSize:{},sessionId:{}",needPermission,pageNo,pageSize,sessionId);
         return roleService.selectAll(needPermission,pageNo,pageSize,sessionId);
     }
 }

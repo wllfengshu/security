@@ -4,8 +4,7 @@ import com.wllfengshu.security.exception.CustomException;
 import com.wllfengshu.security.model.User;
 import com.wllfengshu.security.service.UserService;
 import io.swagger.annotations.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +15,7 @@ import java.util.Map;
 /**
  * @author wllfengshu
  */
+@Slf4j
 @Api(tags = "用户管理")
 @RestController
 @RequestMapping("/users")
@@ -23,7 +23,6 @@ public class UserRest {
 
     @Autowired
     private UserService userService;
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @ApiOperation(value = "插入", httpMethod = "POST")
     @ApiImplicitParam(name = "sessionId", value = "SessionId", required = true, dataType = "string", paramType = "header")
@@ -36,7 +35,7 @@ public class UserRest {
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody User entity)throws CustomException {
-        logger.info("insert entity:{},sessionId:{}",entity,sessionId);
+        log.info("insert entity:{},sessionId:{}",entity,sessionId);
         return userService.insert(entity,sessionId);
     }
 
@@ -54,7 +53,7 @@ public class UserRest {
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("delete id:{},sessionId:{}",id,sessionId);
+        log.info("delete id:{},sessionId:{}",id,sessionId);
         return userService.delete(id,sessionId);
     }
 
@@ -69,7 +68,7 @@ public class UserRest {
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody User entity)throws CustomException {
-        logger.info("update entity:{},sessionId:{}",entity,sessionId);
+        log.info("update entity:{},sessionId:{}",entity,sessionId);
         return userService.update(entity,sessionId);
     }
 
@@ -91,7 +90,7 @@ public class UserRest {
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("select needRole:{},needRoleAndPermission:{},id:{},sessionId:{}",needRole,needRoleAndPermission,id,sessionId);
+        log.info("select needRole:{},needRoleAndPermission:{},id:{},sessionId:{}",needRole,needRoleAndPermission,id,sessionId);
         return userService.select(needRole,needRoleAndPermission,id,sessionId);
     }
 
@@ -115,7 +114,7 @@ public class UserRest {
             @RequestHeader(value = "sessionId") String sessionId,
             HttpServletRequest request,
             HttpServletResponse response)throws CustomException {
-        logger.info("selectAll needRole:{},needRoleAndPermission:{},pageNo:{},pageSize:{},sessionId",needRole,needRoleAndPermission,pageNo,pageSize,sessionId);
+        log.info("selectAll needRole:{},needRoleAndPermission:{},pageNo:{},pageSize:{},sessionId",needRole,needRoleAndPermission,pageNo,pageSize,sessionId);
         return userService.selectAll(needRole,needRoleAndPermission,pageNo,pageSize,sessionId);
     }
 }
